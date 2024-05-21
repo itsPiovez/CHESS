@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Dashboard">
+
+    <Button
+        android:id="@+id/GAME"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gioca"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.537"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.284" />
+
+    <EditText
+        android:id="@+id/roomCodeDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:height="48dp"
+        android:enabled="false"
+        android:hint="Codice stanza"
+        app:layout_constraintBottom_toTopOf="@+id/createRoomButton"
+        app:layout_constraintTop_toBottomOf="@+id/GAME"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <EditText
+        android:id="@+id/roomCodeInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:height="48dp"
+        android:hint="Inserisci il codice della stanza"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/submitRoomCodeButton"
+        app:layout_constraintTop_toBottomOf="@+id/createRoomButton"
+        tools:layout_editor_absoluteX="26dp" />
+
+    <Button
+        android:id="@+id/submitRoomCodeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        android:text="JoinRoom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.541"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createRoomButton" />
+
+    <Button
+        android:id="@+id/createRoomButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="CreateRoom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.543"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/GAME" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
