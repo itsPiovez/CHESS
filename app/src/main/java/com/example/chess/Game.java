@@ -175,10 +175,13 @@ private String[][] pedineBlack = {
         if (selectedButton == null) {
             selectedButton = button;
             tag = button.getTag().toString();
+            int posizione = button.getId();
+            String posizionescacchi = translateNumber(posizione);
+
             if(tag!="") {
                 if (TurnChecker.canMove(tag, WhiteTurn)||canMove) {
-                    int posizione = button.getId();
-                    String posizionescacchi = translateNumber(posizione);
+                    posizione = button.getId();
+                    posizionescacchi = translateNumber(posizione);
                     posizioneIniziale = posizionescacchi;
 
                     char colona = posizionescacchi.charAt(0);
@@ -283,8 +286,10 @@ private String[][] pedineBlack = {
                             Log.d("MyTag", "Vittoria Neri");
                             Toast.makeText(this, "Scacco Matto Re Bianco", Toast.LENGTH_SHORT).show();
                         }
-                        Log.d("MyTag", "Scacco Re Bianco");
-                        Toast.makeText(this, "Scacco Re Bianco", Toast.LENGTH_SHORT).show();
+                        else {
+                            Log.d("MyTag", "Scacco Re Bianco");
+                            Toast.makeText(this, "Scacco Re Bianco", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
                 else {
@@ -297,8 +302,10 @@ private String[][] pedineBlack = {
                             Toast.makeText(this, "Scacco Matto Re Nero", Toast.LENGTH_SHORT).show();
 
                         }
-                        Log.d("MyTag", "Scacco Re Nero");
-                        Toast.makeText(this, "Scacco Re Nero", Toast.LENGTH_SHORT).show();
+                        else {
+                            Log.d("MyTag", "Scacco Re Nero");
+                            Toast.makeText(this, "Scacco Re Nero", Toast.LENGTH_SHORT).show();
+                        }
 
                     }
                     Log.d("MyTag", "Check: " + check);
@@ -377,9 +384,10 @@ private String[][] pedineBlack = {
 
     public static String translateNumber(int id) {
         String idString = Integer.toString(id);
-        String lastTwoDigits = idString.substring(idString.length() - 2);
+        String lastTwoDigits = idString.substring(idString.length() - 3);
+        Log.d("MyTag", "Last Two Digits: " + lastTwoDigits);
         int number = Integer.parseInt(lastTwoDigits);
-        int translatedNumber = number - 25;
+        int translatedNumber = number - 827;
         String suffix;
         switch (translatedNumber) {
             case 1:

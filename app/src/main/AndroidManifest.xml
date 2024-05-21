@@ -16,6 +16,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Game1"
+            android:exported="false" />
+        <activity
             android:name=".OnlineChessActivity"
             android:exported="false" />
         <activity
