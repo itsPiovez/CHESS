@@ -8,23 +8,23 @@
     android:background="#BEC0EF"
     tools:context=".Game1">
 
-    <Button
+    <ImageButton
         android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="660dp"
-        android:layout_marginEnd="28dp"
-        android:text="Home"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="652dp"
+        android:layout_marginEnd="328dp"
+        android:background="@drawable/iconhome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="256dp"
-        android:layout_marginTop="708dp"
-        android:text="DashBoard"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="700dp"
+        android:background="@drawable/icondash"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

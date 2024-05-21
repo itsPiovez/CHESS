@@ -104,7 +104,7 @@ public class Game1 extends AppCompatActivity {
         });
 
 
-        Button buttonBack = findViewById(R.id.button3);
+        ImageButton buttonBack = findViewById(R.id.button3);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,7 +114,7 @@ public class Game1 extends AppCompatActivity {
             }
         });
 
-        Button buttonHome = findViewById(R.id.button);
+        ImageButton buttonHome = findViewById(R.id.button);
         buttonHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -789,6 +789,10 @@ public class Game1 extends AppCompatActivity {
             default:
                 return null;
         }
+
+        Log.d("MyTag", "Translated Number: " + translatedNumber);
+        Log.d("MyTag", "Col: " + col);
+        Log.d("MyTag", "Row: " + row);
 
         // Return the translated number with the suffix.
         return suffix+translatedNumber ;
