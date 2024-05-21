@@ -57,7 +57,7 @@ public class Dashboard extends AppCompatActivity {
         createRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TypeGame = "Online1";
+                TypeGame = "Bianco";
                 if (socketManager.isConnected()) {
                     socketManager.createRoom(); // Crea la stanza
                     String roomCode = socketManager.getIDRoom();
@@ -80,7 +80,7 @@ public class Dashboard extends AppCompatActivity {
             public void onClick(View v) {
                 String roomCode = roomCodeInput.getText().toString();
                 roomCodeDisplay.setText(roomCode);
-                TypeGame = "Online2";
+                TypeGame = "Nero";
                 if (socketManager.isConnected()) {
                     socketManager.joinRoom(roomCode); // Unisciti alla stanza
                     Intent intent = new Intent(Dashboard.this, Game1.class);

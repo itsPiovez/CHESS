@@ -155,8 +155,8 @@ public class Game1 extends AppCompatActivity {
         Log.d("MyTag", "posizione: " + typeGame);
         Log.d("MyTag", "posizione: " + roomCode);
 
-        if(typeGame.equals("Online1")||typeGame.equals("Online2")){
-            textViewGame.setText("Tipo di partita: " + typeGame);
+        if(typeGame.equals("Online1")||typeGame.equals("Nero")){
+            textViewGame.setText("Utente: " + typeGame);
             textViewRoomCode.setText("Codice stanza: " + roomCode);
         }
         else{

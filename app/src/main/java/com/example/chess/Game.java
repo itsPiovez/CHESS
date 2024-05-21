@@ -155,8 +155,8 @@ private String[][] pedineBlack = {
         Log.d("MyTag", "posizione: " + typeGame);
         Log.d("MyTag", "posizione: " + roomCode);
 
-        if(typeGame.equals("Online1")){
-            textViewGame.setText("Tipo di partita: " + typeGame);
+        if(typeGame.equals("Bianco")){
+            textViewGame.setText("Utente: " + typeGame);
             textViewRoomCode.setText("Codice stanza: " + roomCode);
         }
         else{
@@ -331,7 +331,7 @@ private String[][] pedineBlack = {
                     Log.d("MyTag", "Check: " + check);
                     Log.d("MyTag", "Check Mate: " + checkMate);
                 }
-                if(tipoPartita.equals("Online1")){
+                if(tipoPartita.equals("Bianco")){
                     canMove = false;
                 }
 
