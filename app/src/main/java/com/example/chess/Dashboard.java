@@ -83,7 +83,7 @@ public class Dashboard extends AppCompatActivity {
                 TypeGame = "Online2";
                 if (socketManager.isConnected()) {
                     socketManager.joinRoom(roomCode); // Unisciti alla stanza
-                    Intent intent = new Intent(Dashboard.this, Game.class);
+                    Intent intent = new Intent(Dashboard.this, Game1.class);
                     intent.putExtra("TypeGame", TypeGame);
                     intent.putExtra("RoomCode", roomCode); // Passa il codice della stanza all'Activity Game
                     startActivity(intent);

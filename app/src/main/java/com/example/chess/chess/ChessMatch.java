@@ -231,16 +231,16 @@ public class ChessMatch {
 	
 	private void validateSourcePosition(Position position) {
 		if (!board.thereIsAPiece(position)) {
-			throw new ChessException("There is no piece on source position");
+			//throw new ChessException("There is no piece on source position");
 		}
 		if (currentPlayer != ((ChessPiece)board.piece(position)).getColor()) {
-			throw new ChessException("The chosen piece is not yours");
+			//throw new ChessException("The chosen piece is not yours");
 		}
 	}
 	
 	private void validateTargetPosition(Position source, Position target) {
 		if (!board.piece(source).possibleMove(target)) {
-			throw new ChessException("The chosen piece can't move to target position");
+			//throw new ChessException("The chosen piece can't move to target position");
 		}
 	}
 	

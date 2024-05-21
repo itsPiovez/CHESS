@@ -11,6 +11,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,6 +88,7 @@ private String[][] pedineBlack = {
     private TextView textViewRoomCode;
     private SocketManager socketManager;
     private String idRoom;
+    private String tipoPartita;
 
 
     @SuppressLint("MissingInflatedId")
@@ -101,6 +104,25 @@ private String[][] pedineBlack = {
             return insets;
         });
 
+        Button buttonBack = findViewById(R.id.button3);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Game.this, Dashboard.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        Button buttonHome = findViewById(R.id.button);
+        buttonHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Game.this, Login.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
 
         moves = new ArrayList<>();
@@ -110,6 +132,7 @@ private String[][] pedineBlack = {
         String typeGame = intent.getStringExtra("TypeGame");
         String roomCode = intent.getStringExtra("RoomCode");
         idRoom = roomCode;
+        tipoPartita= typeGame;
 
         socketManager = SocketManager.getInstance(this);
         socketManager.getSocket().on("opponentMove", new Emitter.Listener() {
@@ -128,20 +151,17 @@ private String[][] pedineBlack = {
             }
         });
 
-        if(typeGame.equals("Online1")|| typeGame.equals("Offline")){
-        }
-        else if(typeGame.equals("Online2")){
-        }
 
         Log.d("MyTag", "posizione: " + typeGame);
         Log.d("MyTag", "posizione: " + roomCode);
 
-        if(typeGame.equals("Online1")||typeGame.equals("Online2")){
+        if(typeGame.equals("Online1")){
             textViewGame.setText("Tipo di partita: " + typeGame);
             textViewRoomCode.setText("Codice stanza: " + roomCode);
         }
         else{
             textViewGame.setText("Tipo di partita: " + typeGame);
+            canMove = true;
         }
 
         for (riga = 0; riga < chessBoard.length; riga++) {
@@ -170,7 +190,7 @@ private String[][] pedineBlack = {
     private List<ChessPiece> capturedWhite = new ArrayList<>();
     private boolean check ;
     private boolean checkMate;
-    private boolean canMove = false;
+    private boolean canMove = true;
     private void handleButtonClick(ImageButton button) {
         if (selectedButton == null) {
             selectedButton = button;
@@ -179,7 +199,7 @@ private String[][] pedineBlack = {
             String posizionescacchi = translateNumber(posizione);
 
             if(tag!="") {
-                if (TurnChecker.canMove(tag, WhiteTurn)||canMove) {
+                if (TurnChecker.canMove(tag, WhiteTurn)&&canMove) {
                     posizione = button.getId();
                     posizionescacchi = translateNumber(posizione);
                     posizioneIniziale = posizionescacchi;
@@ -311,6 +331,9 @@ private String[][] pedineBlack = {
                     Log.d("MyTag", "Check: " + check);
                     Log.d("MyTag", "Check Mate: " + checkMate);
                 }
+                if(tipoPartita.equals("Online1")){
+                    canMove = false;
+                }
 
                 WhiteTurn = !WhiteTurn;
                 for (int i = 0; i < 8; i++) {
@@ -361,6 +384,7 @@ private String[][] pedineBlack = {
             target = new ChessPosition(colona, rig);
             ChessPiece capturedPiece = chessMatch.performChessMove(source, target);
             canMove=true;
+            WhiteTurn = !WhiteTurn;
         });
     }
 
