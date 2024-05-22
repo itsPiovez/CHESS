@@ -1003,6 +1003,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
+        android:textStyle="bold"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
@@ -1012,6 +1014,8 @@
         android:id="@+id/TypeGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/RoomCode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.473"
@@ -1020,22 +1024,35 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
-        android:id="@+id/button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="660dp"
+        android:id="@+id/button3"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/iconhome"
+        android:background="@drawable/burger"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/button3"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="328dp"
-        android:layout_marginTop="716dp"
-        android:background="@drawable/icondash"
-        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/button5"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="116dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/settings"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/home"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

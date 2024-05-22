@@ -90,6 +90,8 @@ private String[][] pedineBlack = {
     private String idRoom;
     private String tipoPartita;
 
+    private Boolean butt=true;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -104,7 +106,7 @@ private String[][] pedineBlack = {
             return insets;
         });
 
-        ImageButton buttonBack = findViewById(R.id.button3);
+        ImageButton buttonBack = findViewById(R.id.button5);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,6 +123,22 @@ private String[][] pedineBlack = {
                 Intent intent = new Intent(Game.this, Login.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        ImageButton buttonSettings = findViewById(R.id.button3);
+        buttonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(butt){
+                    buttonHome.setVisibility(View.VISIBLE);
+                    buttonBack.setVisibility(View.VISIBLE);
+                    butt=false;
+                }else{
+                    buttonHome.setVisibility(View.INVISIBLE);
+                    buttonBack.setVisibility(View.INVISIBLE);
+                    butt=true;
+                }
             }
         });
 

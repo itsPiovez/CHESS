@@ -9,23 +9,36 @@
     tools:context=".Game1">
 
     <ImageButton
-        android:id="@+id/button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="652dp"
-        android:layout_marginEnd="328dp"
-        android:background="@drawable/iconhome"
+        android:id="@+id/button3"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/burger"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/button3"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="652dp"
-        android:background="@drawable/icondash"
-        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/button5"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="116dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/settings"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/home"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -1021,6 +1034,8 @@
     <TextView
         android:id="@+id/RoomCode"
         android:layout_width="wrap_content"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -1031,6 +1046,8 @@
     <TextView
         android:id="@+id/TypeGame"
         android:layout_width="wrap_content"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/RoomCode"
         app:layout_constraintEnd_toEndOf="parent"
