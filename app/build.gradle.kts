@@ -40,6 +40,7 @@ android {
 
 dependencies {
     implementation ("io.socket:socket.io-client:2.0.0")
+    implementation ("com.android.volley:volley:1.2.1")
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
