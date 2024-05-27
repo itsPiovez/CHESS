@@ -12,8 +12,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import androidx.gridlayout.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -106,10 +110,15 @@ private String[][] pedineBlack = {
             return insets;
         });
 
+
+
         ImageButton buttonBack = findViewById(R.id.button5);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //devo impostare che lascio la partita
+                SocketManager.getInstance(Game.this).disconnect();
+
                 Intent intent = new Intent(Game.this, Dashboard.class);
                 startActivity(intent);
                 finish();
@@ -120,6 +129,9 @@ private String[][] pedineBlack = {
         buttonHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //devo impostare che lascio la partita
+                SocketManager.getInstance(Game.this).disconnect();
+
                 Intent intent = new Intent(Game.this, Login.class);
                 startActivity(intent);
                 finish();
@@ -153,6 +165,33 @@ private String[][] pedineBlack = {
         tipoPartita= typeGame;
 
         socketManager = SocketManager.getInstance(this);
+
+        socketManager.getSocket().on("gameStart", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        canMove = true;
+                        Toast.makeText(Game.this, "Game started", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        SocketManager.getInstance(this).addPlayerLeftListener(new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // The other player has left the game
+                        // Update the UI accordingly
+                        Toast.makeText(Game.this, "Game WIN", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            }
+        });
         socketManager.getSocket().on("opponentMove", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -169,6 +208,24 @@ private String[][] pedineBlack = {
             }
         });
 
+        ImageView imageView = findViewById(R.id.imageView6);
+        imageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                imageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int imageSize = imageView.getWidth();
+                int buttonSize = imageSize / 8;
+
+                GridLayout gridLayout = findViewById(R.id.gridLayout);
+                for (int i = 0; i < gridLayout.getChildCount(); i++) {
+                    ImageButton button = (ImageButton) gridLayout.getChildAt(i);
+                    ViewGroup.LayoutParams params = button.getLayoutParams();
+                    params.width = buttonSize;
+                    params.height = buttonSize;
+                    button.setLayoutParams(params);
+                }
+            }
+        });
 
         Log.d("MyTag", "posizione: " + typeGame);
         Log.d("MyTag", "posizione: " + roomCode);
@@ -208,7 +265,7 @@ private String[][] pedineBlack = {
     private List<ChessPiece> capturedWhite = new ArrayList<>();
     private boolean check ;
     private boolean checkMate;
-    private boolean canMove = true;
+    private boolean canMove = false;
     private void handleButtonClick(ImageButton button) {
         if (selectedButton == null) {
             selectedButton = button;

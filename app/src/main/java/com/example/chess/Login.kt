@@ -49,7 +49,7 @@ class Login : AppCompatActivity() {
 
         val button3 = findViewById<Button>(R.id.button4)
         button3.setOnClickListener {
-            val intent = Intent(this@Login, Game::class.java)
+            val intent = Intent(this@Login, Dashboard::class.java)
             val TypeGame = "Offline"
             intent.putExtra("TypeGame", TypeGame)
             startActivity(intent)

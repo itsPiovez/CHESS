@@ -17,7 +17,8 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class SocketManager {
-    private static final String SERVER_URL = "https://scacchi.5cimarcopiovesan.barsanti.edu.it/";
+    private static final String SERVER_URL = "http://192.168.178.147:3000";
+    //private static final String SERVER_URL = "https://scacchi.5cimarcopiovesan.barsanti.edu.it/";
     private static SocketManager instance;
     private Socket socket;
     private Context context;
@@ -55,6 +56,8 @@ public class SocketManager {
             socket.on("roomJoined", onRoomJoined);
             socket.on("opponentMove", onOpponentMove);
             socket.on("playerJoined", onPlayerJoined);
+            socket.on("gameStart", onGameStart); // Aggiungi questo
+
         }
     }
 
@@ -72,6 +75,9 @@ public class SocketManager {
         if (socket != null && socket.connected()) {
             socket.disconnect();
         }
+    }
+    public void addPlayerLeftListener(Emitter.Listener listener) {
+        socket.on("playerLeft", listener);
     }
 
     public boolean isConnected() {
@@ -161,5 +167,9 @@ public class SocketManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    };
+    public Emitter.Listener onGameStart = args -> {
+        Log.d("SocketManager", "Game started");
+        handler.post(() -> Toast.makeText(context, "Game started", Toast.LENGTH_SHORT).show());
     };
 }

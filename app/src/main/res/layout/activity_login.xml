@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
         android:backgroundTint="#2196F3"
-        android:text="Google"
+        android:text="Gioca Subito"
         app:layout_constraintBottom_toTopOf="@+id/buttonregistration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.529"

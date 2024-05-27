@@ -79,16 +79,22 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String roomCode = roomCodeInput.getText().toString();
-                roomCodeDisplay.setText(roomCode);
-                TypeGame = "Nero";
-                if (socketManager.isConnected()) {
-                    socketManager.joinRoom(roomCode); // Unisciti alla stanza
-                    Intent intent = new Intent(Dashboard.this, Game1.class);
-                    intent.putExtra("TypeGame", TypeGame);
-                    intent.putExtra("RoomCode", roomCode); // Passa il codice della stanza all'Activity Game
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(Dashboard.this, "Connection to server not active", Toast.LENGTH_SHORT).show();
+                if(roomCode.isEmpty()) {
+                    Toast.makeText(Dashboard.this, "Room code cannot be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    roomCodeDisplay.setText(roomCode);
+                    TypeGame = "Nero";
+                    if (socketManager.isConnected()) {
+                        socketManager.joinRoom(roomCode); // Unisciti alla stanza
+                        Intent intent = new Intent(Dashboard.this, Game1.class);
+                        intent.putExtra("TypeGame", TypeGame);
+                        intent.putExtra("RoomCode", roomCode); // Passa il codice della stanza all'Activity Game
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(Dashboard.this, "Connection to server not active", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
