@@ -68,7 +68,7 @@ class Login : AppCompatActivity() {
     }
 
     private fun authenticateUser(email: String, password: String) {
-        val url = "http://172.20.10.3:3000/login"
+        val url = "https://scacchi.5cimarcopiovesan.barsanti.edu.it/login"
 
         val json = JSONObject().apply {
             put("email", email)
