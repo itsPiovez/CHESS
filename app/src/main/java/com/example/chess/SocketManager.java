@@ -17,8 +17,8 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class SocketManager {
-    private static final String SERVER_URL = "http://192.168.178.147:3000";
-    //private static final String SERVER_URL = "https://scacchi.5cimarcopiovesan.barsanti.edu.it/";
+    //private static final String SERVER_URL = "http://192.168.178.147:3000";
+    private static final String SERVER_URL = "https://scacchi.5cimarcopiovesan.barsanti.edu.it/";
     private static SocketManager instance;
     private Socket socket;
     private Context context;
