@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -208,24 +209,23 @@ private String[][] pedineBlack = {
             }
         });
 
-        ImageView imageView = findViewById(R.id.imageView6);
-        imageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                imageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int imageSize = imageView.getWidth();
-                int buttonSize = imageSize / 8;
+        // Get screen size
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
 
-                GridLayout gridLayout = findViewById(R.id.gridLayout);
-                for (int i = 0; i < gridLayout.getChildCount(); i++) {
-                    ImageButton button = (ImageButton) gridLayout.getChildAt(i);
-                    ViewGroup.LayoutParams params = button.getLayoutParams();
-                    params.width = buttonSize;
-                    params.height = buttonSize;
-                    button.setLayoutParams(params);
-                }
-            }
-        });
+        // Calculate button size
+        int buttonSize = screenWidth / 8;
+
+        GridLayout gridLayout = findViewById(R.id.gridLayout);
+        for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            ImageButton button = (ImageButton) gridLayout.getChildAt(i);
+            ViewGroup.LayoutParams params = button.getLayoutParams();
+            params.width = buttonSize;
+            params.height = buttonSize;
+            button.setLayoutParams(params);
+        }
 
         Log.d("MyTag", "posizione: " + typeGame);
         Log.d("MyTag", "posizione: " + roomCode);
@@ -337,10 +337,10 @@ private String[][] pedineBlack = {
             }
 
 
-            if (selectedButton.getBackground() != null && !(selectedButton.getBackground() instanceof ColorDrawable && ((ColorDrawable) selectedButton.getBackground()).getColor() == Color.TRANSPARENT)  && validMove ==true ) {
-                Drawable backgroundImage = selectedButton.getBackground();
-                selectedButton.setBackground(null);
-                button.setBackground(backgroundImage);
+            if (selectedButton.getForeground() != null && !(selectedButton.getForeground() instanceof ColorDrawable && ((ColorDrawable) selectedButton.getForeground()).getColor() == Color.TRANSPARENT)  && validMove ==true ) {
+                Drawable backgroundImage = selectedButton.getForeground();
+                selectedButton.setForeground(null);
+                button.setForeground(backgroundImage);
 
                 button.setTag(tag);
 
@@ -440,13 +440,13 @@ private String[][] pedineBlack = {
 
             int resId = getResources().getIdentifier(buttonFrom, "id", getPackageName());
             ImageButton button = findViewById(resId);
-            Drawable backgroundImage = button.getBackground();
-            button.setBackground(null);
+            Drawable backgroundImage = button.getForeground();
+            button.setForeground(null);
             button.setTag("");
 
             resId = getResources().getIdentifier(buttonTo, "id", getPackageName());
             button = findViewById(resId);
-            button.setBackground(backgroundImage);
+            button.setForeground(backgroundImage);
             button.setTag(tagN);
 
             char colona0 = from.charAt(0);
@@ -471,13 +471,13 @@ private String[][] pedineBlack = {
             String buttonTo = "button_" + "f1";
             int resId = getResources().getIdentifier(buttonFrom, "id", getPackageName());
             ImageButton button = findViewById(resId);
-            Drawable backgroundImage = button.getBackground();
-            button.setBackground(null);
+            Drawable backgroundImage = button.getForeground();
+            button.setForeground(null);
             button.setTag("");
 
             resId = getResources().getIdentifier(buttonTo, "id", getPackageName());
             button = findViewById(resId);
-            button.setBackground(backgroundImage);
+            button.setForeground(backgroundImage);
             button.setTag("wr");
         }
         if (from.equals("e1 wk") && to.equals("c1 wk")) {
@@ -485,13 +485,13 @@ private String[][] pedineBlack = {
             String buttonTo = "button_" + "d1";
             int resId = getResources().getIdentifier(buttonFrom, "id", getPackageName());
             ImageButton button = findViewById(resId);
-            Drawable backgroundImage = button.getBackground();
-            button.setBackground(null);
+            Drawable backgroundImage = button.getForeground();
+            button.setForeground(null);
             button.setTag("");
 
             resId = getResources().getIdentifier(buttonTo, "id", getPackageName());
             button = findViewById(resId);
-            button.setBackground(backgroundImage);
+            button.setForeground(backgroundImage);
             button.setTag("wr");
         }
         if (from.equals("e8 bk") && to.equals("g8 bk")) {
@@ -499,13 +499,13 @@ private String[][] pedineBlack = {
             String buttonTo = "button_" + "f8";
             int resId = getResources().getIdentifier(buttonFrom, "id", getPackageName());
             ImageButton button = findViewById(resId);
-            Drawable backgroundImage = button.getBackground();
-            button.setBackground(null);
+            Drawable backgroundImage = button.getForeground();
+            button.setForeground(null);
             button.setTag("");
 
             resId = getResources().getIdentifier(buttonTo, "id", getPackageName());
             button = findViewById(resId);
-            button.setBackground(backgroundImage);
+            button.setForeground(backgroundImage);
             button.setTag("br");
         }
         if (from.equals("e8 bk") && to.equals("c8 bk")) {
@@ -513,13 +513,13 @@ private String[][] pedineBlack = {
             String buttonTo = "button_" + "d8";
             int resId = getResources().getIdentifier(buttonFrom, "id", getPackageName());
             ImageButton button = findViewById(resId);
-            Drawable backgroundImage = button.getBackground();
-            button.setBackground(null);
+            Drawable backgroundImage = button.getForeground();
+            button.setForeground(null);
             button.setTag("");
 
             resId = getResources().getIdentifier(buttonTo, "id", getPackageName());
             button = findViewById(resId);
-            button.setBackground(backgroundImage);
+            button.setForeground(backgroundImage);
             button.setTag("br");
         }
     }
