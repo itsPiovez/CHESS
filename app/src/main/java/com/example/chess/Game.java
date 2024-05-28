@@ -349,6 +349,7 @@ private String[][] pedineBlack = {
                 moves.add(posizionescacchi + " " + tag);
                 String from = posizioneIniziale+ " " + tag;
                 String to = posizionescacchi + " " + tag;
+                handleArrocco(from,to);
                 socketManager.sendMoveToServer(from, to,idRoom);
 
                 Log.d("MyTag", "Mosse: " + moves);
@@ -457,10 +458,70 @@ private String[][] pedineBlack = {
             int rig = to.charAt(1)- '0';
             Log.d( "MyTag", "colona: " + colona + " rig: " + rig);
             target = new ChessPosition(colona, rig);
+            handleArrocco(from,to);
             ChessPiece capturedPiece = chessMatch.performChessMove(source, target);
             canMove=true;
             WhiteTurn = !WhiteTurn;
         });
+    }
+
+    public void handleArrocco(String from, String to) {
+        if (from.equals("e1 wk") && to.equals("g1 wk")) {
+            String buttonFrom = "button_" + "h1";
+            String buttonTo = "button_" + "f1";
+            int resId = getResources().getIdentifier(buttonFrom, "id", getPackageName());
+            ImageButton button = findViewById(resId);
+            Drawable backgroundImage = button.getBackground();
+            button.setBackground(null);
+            button.setTag("");
+
+            resId = getResources().getIdentifier(buttonTo, "id", getPackageName());
+            button = findViewById(resId);
+            button.setBackground(backgroundImage);
+            button.setTag("wr");
+        }
+        if (from.equals("e1 wk") && to.equals("c1 wk")) {
+            String buttonFrom = "button_" + "a1";
+            String buttonTo = "button_" + "d1";
+            int resId = getResources().getIdentifier(buttonFrom, "id", getPackageName());
+            ImageButton button = findViewById(resId);
+            Drawable backgroundImage = button.getBackground();
+            button.setBackground(null);
+            button.setTag("");
+
+            resId = getResources().getIdentifier(buttonTo, "id", getPackageName());
+            button = findViewById(resId);
+            button.setBackground(backgroundImage);
+            button.setTag("wr");
+        }
+        if (from.equals("e8 bk") && to.equals("g8 bk")) {
+            String buttonFrom = "button_" + "h8";
+            String buttonTo = "button_" + "f8";
+            int resId = getResources().getIdentifier(buttonFrom, "id", getPackageName());
+            ImageButton button = findViewById(resId);
+            Drawable backgroundImage = button.getBackground();
+            button.setBackground(null);
+            button.setTag("");
+
+            resId = getResources().getIdentifier(buttonTo, "id", getPackageName());
+            button = findViewById(resId);
+            button.setBackground(backgroundImage);
+            button.setTag("br");
+        }
+        if (from.equals("e8 bk") && to.equals("c8 bk")) {
+            String buttonFrom = "button_" + "a8";
+            String buttonTo = "button_" + "d8";
+            int resId = getResources().getIdentifier(buttonFrom, "id", getPackageName());
+            ImageButton button = findViewById(resId);
+            Drawable backgroundImage = button.getBackground();
+            button.setBackground(null);
+            button.setTag("");
+
+            resId = getResources().getIdentifier(buttonTo, "id", getPackageName());
+            button = findViewById(resId);
+            button.setBackground(backgroundImage);
+            button.setTag("br");
+        }
     }
 
     public List<int[]> getPossibleMovesCoordinates(boolean[][] possibleMoves) {
