@@ -56,7 +56,7 @@ class Registration : AppCompatActivity() {
             }
         }
     }private fun registerUser(email: String, password: String, name: String) {
-        val url = "https://scacchi.5cimarcopiovesan.barsanti.edu.it//register"
+        val url = "https://scacchi.5cimarcopiovesan.barsanti.edu.it/register"
 
         val json = JSONObject().apply {
             put("email", email)
