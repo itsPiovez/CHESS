@@ -31,6 +31,7 @@ import androidx.core.view.WindowInsetsCompat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.chess.boardgame.Position;
 import com.example.chess.chess.ChessMatch;
 import com.example.chess.chess.ChessPiece;
 import com.example.chess.chess.ChessPosition;
@@ -88,7 +89,7 @@ private String[][] pedineBlack = {
             {"a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8"}
 
     };
-    private ChessMatch chessMatch = new ChessMatch();
+    private ChessMatch chessMatch = new ChessMatch(this);
     private TextView textViewGame;
     private TextView textViewRoomCode;
     private SocketManager socketManager;
@@ -260,6 +261,8 @@ private String[][] pedineBlack = {
     private int posizioneRigaPartenza;
     private int posizioneColonnaPartenza;
     private String posizioneIniziale;
+    private ChessPiece capturedPiece = null;
+
     private ImageButton selectedButton1;
     private List<ChessPiece> capturedBlack = new ArrayList<>();
     private List<ChessPiece> capturedWhite = new ArrayList<>();
@@ -270,13 +273,10 @@ private String[][] pedineBlack = {
         if (selectedButton == null) {
             selectedButton = button;
             tag = button.getTag().toString();
-            int posizione = button.getId();
-            String posizionescacchi = translateNumber(posizione);
-
             if(tag!="") {
                 if (TurnChecker.canMove(tag, WhiteTurn)&&canMove) {
-                    posizione = button.getId();
-                    posizionescacchi = translateNumber(posizione);
+                    int posizione = button.getId();
+                    String posizionescacchi = translateNumber(posizione);
                     posizioneIniziale = posizionescacchi;
 
                     char colona = posizionescacchi.charAt(0);
@@ -287,17 +287,21 @@ private String[][] pedineBlack = {
                     posizioneColonnaPartenza = col;
                     posizioneRigaPartenza = row;
                     selectedButton1 = button;
+                    highlightPossibleMoves(possibleMoves);
                 }
                 else {
+                    removeHighlightFromPossibleMoves();
                     selectedButton = null;
                     tag= null;
                 }
             }
             else {
+                removeHighlightFromPossibleMoves();
                 selectedButton = null;
                 tag= null;
             }
-        } else {
+        }
+        else {
 
             List<int[]> possibleMoveCoordinates = getPossibleMovesCoordinates(possibleMoves);
             for (int[] coordinates : possibleMoveCoordinates) {
@@ -310,7 +314,6 @@ private String[][] pedineBlack = {
             char colona = posizionescacchi.charAt(0);
             int rig = Integer.parseInt(posizionescacchi.substring(1));
             target = new ChessPosition((char) (colona), rig);
-            ChessPiece capturedPiece = null;
             //controllo la colonna e la riga
             boolean validMove = false;
             for (int[] coordinates : possibleMoveCoordinates) {
@@ -322,9 +325,16 @@ private String[][] pedineBlack = {
                 }
                 i++;
             }
+            if (!validMove) {
+                selectedButton = null;
+                tag = null;
+                removeHighlightFromPossibleMoves();
+                Toast.makeText(this, "Invalid move. Please select a valid location.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Log.d("MyTag", "mossa1 " + validMove);
             //controllo validità in caso di scacco
-            if(!WhiteTurn){
+            if (!WhiteTurn) {
                 capturedPiece = chessMatch.performChessMove(source, target);
                 check = chessMatch.testCheck(BLACK);
             }
@@ -337,10 +347,11 @@ private String[][] pedineBlack = {
             }
 
 
-            if (selectedButton.getForeground() != null && !(selectedButton.getForeground() instanceof ColorDrawable && ((ColorDrawable) selectedButton.getForeground()).getColor() == Color.TRANSPARENT)  && validMove ==true ) {
+            if (selectedButton.getForeground() != null && validMove ==true ) {
                 Drawable backgroundImage = selectedButton.getForeground();
                 selectedButton.setForeground(null);
                 button.setForeground(backgroundImage);
+                removeHighlightFromPossibleMoves();
 
                 button.setTag(tag);
 
@@ -412,9 +423,9 @@ private String[][] pedineBlack = {
                 }
 
                 WhiteTurn = !WhiteTurn;
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < 7; i++) {
                     String riga = "";
-                    for (int j = 0; j < 8; j++) {
+                    for (int j = 0; j < 7; j++) {
                         riga = riga + pedine[i][j] + " ";
                         if (pedine[i][j] == "") {
                             riga = riga + "  ";
@@ -423,10 +434,6 @@ private String[][] pedineBlack = {
                     Log.d("MyTag", "pedina: " + riga);
                 }
                 Log.d("MyTag", "Scacco " + check);
-            }
-            else{
-                selectedButton = null;
-                tag= null;
             }
         }
     }
@@ -465,6 +472,33 @@ private String[][] pedineBlack = {
         });
     }
 
+    private void highlightPossibleMoves(boolean[][] possibleMoves) {
+        for (int i = 0; i < possibleMoves.length; i++) {
+            for (int j = 0; j < possibleMoves[i].length; j++) {
+                if (possibleMoves[i][j]) {
+                    String buttonId = "button_" + chessBoard[i][j];
+                    int resId = getResources().getIdentifier(buttonId, "id", getPackageName());
+                    ImageButton button = findViewById(resId);
+                    button.setBackgroundColor(Color.YELLOW);  // Cambia questo con il colore desiderato
+                }
+            }
+        }
+    }
+
+    private void removeHighlightFromPossibleMoves() {
+        for (int i = 0; i < chessBoard.length; i++) {
+            for (int j = 0; j < chessBoard[i].length; j++) {
+                    String buttonId = "button_" + chessBoard[i][j];
+                    int resId = getResources().getIdentifier(buttonId, "id", getPackageName());
+                    ImageButton button = findViewById(resId);
+                    if ((i + j) % 2 == 0) {
+                        button.setBackgroundColor(Color.parseColor("#EED7B3"));
+                    } else {
+                        button.setBackgroundColor(Color.parseColor("#B38663"));
+                    }
+                }
+        }
+    }
     public void handleArrocco(String from, String to) {
         if (from.equals("e1 wk") && to.equals("g1 wk")) {
             String buttonFrom = "button_" + "h1";

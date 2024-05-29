@@ -43,6 +43,7 @@ import io.socket.emitter.Emitter;
 
 public class Game1 extends AppCompatActivity {
     private boolean WhiteTurn = true;
+
     private static int row;
     private static int col;
     private int colonna;
@@ -88,7 +89,7 @@ public class Game1 extends AppCompatActivity {
             {"a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8"}
 
     };
-    private ChessMatch chessMatch = new ChessMatch();
+    private ChessMatch chessMatch = new ChessMatch(this);
     private TextView textViewGame;
     private TextView textViewRoomCode;
     private SocketManager socketManager;
@@ -252,13 +253,12 @@ public class Game1 extends AppCompatActivity {
         if (selectedButton == null) {
             selectedButton = button;
             tag = button.getTag().toString();
-            int posizione = button.getId();
-            String posizionescacchi = translateNumber(posizione);
+
 
             if(tag!="") {
                 if (TurnChecker.canMove(tag, WhiteTurn)&&canMove) {
-                    posizione = button.getId();
-                    posizionescacchi = translateNumber(posizione);
+                    int posizione = button.getId();
+                    String posizionescacchi = translateNumber(posizione);
                     posizioneIniziale = posizionescacchi;
 
                     char colona = posizionescacchi.charAt(0);
@@ -269,17 +269,21 @@ public class Game1 extends AppCompatActivity {
                     posizioneColonnaPartenza = col;
                     posizioneRigaPartenza = row;
                     selectedButton1 = button;
+                    highlightPossibleMoves(possibleMoves);
                 }
                 else {
+                    removeHighlightFromPossibleMoves();
                     selectedButton = null;
                     tag= null;
                 }
             }
             else {
+                removeHighlightFromPossibleMoves();
                 selectedButton = null;
                 tag= null;
             }
-        } else {
+        }
+        else {
 
             List<int[]> possibleMoveCoordinates = getPossibleMovesCoordinates(possibleMoves);
             for (int[] coordinates : possibleMoveCoordinates) {
@@ -304,6 +308,14 @@ public class Game1 extends AppCompatActivity {
                 }
                 i++;
             }
+
+            if (!validMove) {
+                selectedButton = null;
+                tag = null;
+                removeHighlightFromPossibleMoves();
+                Toast.makeText(this, "Invalid move. Please select a valid location.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Log.d("MyTag", "mossa1 " + validMove);
             //controllo validità in caso di scacco
             if(!WhiteTurn){
@@ -317,10 +329,11 @@ public class Game1 extends AppCompatActivity {
             }
 
 
-            if (selectedButton.getForeground() != null && !(selectedButton.getForeground() instanceof ColorDrawable && ((ColorDrawable) selectedButton.getForeground()).getColor() == Color.TRANSPARENT)  && validMove) {
+            if (selectedButton.getForeground() != null && validMove) {
                 Drawable backgroundImage = selectedButton.getForeground();
                 selectedButton.setForeground(null);
                 button.setForeground(backgroundImage);
+                removeHighlightFromPossibleMoves();
 
                 button.setTag(tag);
 
@@ -391,9 +404,9 @@ public class Game1 extends AppCompatActivity {
 
                 WhiteTurn = !WhiteTurn;
                 canMove = false;
-                for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < 7; i++) {
                     String riga = "";
-                    for (int j = 0; j < 8; j++) {
+                    for (int j = 0; j < 7; j++) {
                         riga = riga + pedine[i][j] + " ";
                         if (pedine[i][j] == "") {
                             riga = riga + "  ";
@@ -445,6 +458,33 @@ public class Game1 extends AppCompatActivity {
     }
 
 
+    private void highlightPossibleMoves(boolean[][] possibleMoves) {
+        for (int i = 0; i < possibleMoves.length; i++) {
+            for (int j = 0; j < possibleMoves[i].length; j++) {
+                if (possibleMoves[i][j]) {
+                    String buttonId = "button_" + chessBoard[i][j];
+                    int resId = getResources().getIdentifier(buttonId, "id", getPackageName());
+                    ImageButton button = findViewById(resId);
+                    button.setBackgroundColor(Color.YELLOW);  // Cambia questo con il colore desiderato
+                }
+            }
+        }
+    }
+
+    private void removeHighlightFromPossibleMoves() {
+        for (int i = 0; i < chessBoard.length; i++) {
+            for (int j = 0; j < chessBoard[i].length; j++) {
+                String buttonId = "button_" + chessBoard[i][j];
+                int resId = getResources().getIdentifier(buttonId, "id", getPackageName());
+                ImageButton button = findViewById(resId);
+                if ((i + j) % 2 == 0) {
+                    button.setBackgroundColor(Color.parseColor("#B38663"));
+                } else {
+                    button.setBackgroundColor(Color.parseColor("#EED7B3"));
+                }
+            }
+        }
+    }
     public void handleArrocco(String from, String to) {
         if (from.equals("e1 wk") && to.equals("g1 wk")) {
             String buttonFrom = "button_" + "h1";

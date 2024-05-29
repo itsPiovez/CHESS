@@ -1,5 +1,8 @@
 package com.example.chess.chess;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,34 +22,36 @@ public class ChessMatch {
 	
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPieces = new ArrayList<>();
-	
-	public ChessMatch() {
+	private Context context;
+
+	public ChessMatch(Context context) {
 		board = new Board(8, 8);
+		this.context = context;
 		turn = 1;
 		currentPlayer = Color.WHITE;
 		initialSetup();
 	}
-	
+
 	public int getTurn() {
 		return turn;
 	}
-	
+
 	public Color getCurrentPlayer() {
 		return currentPlayer;
 	}
-	
+
 	public boolean getCheck() {
 		return check;
 	}
-	
+
 	public boolean getCheckMate() {
 		return checkMate;
 	}
-	
+
 	public ChessPiece getEnPassantVulnerable() {
 		return enPassantVulnerable;
 	}
-	
+
 	public ChessPiece getPromoted() {
 		return promoted;
 	}
@@ -184,7 +189,7 @@ public class ChessMatch {
 		return capturedPiece;
 	}
 	
-	private void undoMove(Position source, Position target, Piece capturedPiece) {
+	public void undoMove(Position source, Position target, Piece capturedPiece) {
 		ChessPiece p = (ChessPiece)board.removePiece(target);
 		p.decreaseMoveCount();
 		board.placePiece(p, source);
@@ -228,19 +233,23 @@ public class ChessMatch {
 			}
 		}
 	}
-	
+
 	private void validateSourcePosition(Position position) {
-		if (!board.thereIsAPiece(position)) {
+		if(!board.thereIsAPiece(position)) {
 			//throw new ChessException("There is no piece on source position");
 		}
-		if (currentPlayer != ((ChessPiece)board.piece(position)).getColor()) {
+		ChessPiece p = (ChessPiece)board.piece(position);
+		if (p == null || currentPlayer != p.getColor()) {
 			//throw new ChessException("The chosen piece is not yours");
 		}
+		if(p != null && !p.isThereAnyPossibleMove()) {
+			//throw new ChessException("There is no possible moves for the chosen piece");
+		}
 	}
-	
+
 	private void validateTargetPosition(Position source, Position target) {
 		if (!board.piece(source).possibleMove(target)) {
-			//throw new ChessException("The chosen piece can't move to target position");
+			//Toast.makeText(context, "The chosen piece can't move to target position", Toast.LENGTH_SHORT).show();
 		}
 	}
 	

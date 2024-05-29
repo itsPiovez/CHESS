@@ -15,9 +15,9 @@ import com.example.chess.chess.ChessPosition;
 public class Program {
 
 	public static void main(String[] args) {
-		
+		/*
 		Scanner sc = new Scanner(System.in);
-		ChessMatch chessMatch = new ChessMatch();
+		ChessMatch chessMatch = new ChessMatch(this.context);
 		List<ChessPiece> captured = new ArrayList<>();
 		
 		while (!chessMatch.getCheckMate()) {
@@ -61,6 +61,6 @@ public class Program {
 			}
 		}
 		UI.clearScreen();
-		UI.printMatch(chessMatch, captured);
+		UI.printMatch(chessMatch, captured);*/
 	}
 }
