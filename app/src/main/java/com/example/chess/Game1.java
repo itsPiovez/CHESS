@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -465,7 +466,12 @@ public class Game1 extends AppCompatActivity {
                     String buttonId = "button_" + chessBoard[i][j];
                     int resId = getResources().getIdentifier(buttonId, "id", getPackageName());
                     ImageButton button = findViewById(resId);
-                    button.setBackgroundColor(Color.YELLOW);  // Cambia questo con il colore desiderato
+                    ColorDrawable buttonColor = (ColorDrawable) button.getBackground();
+                    int colorId = buttonColor.getColor();
+                    GradientDrawable border = new GradientDrawable();
+                    border.setColor(colorId);
+                    border.setStroke(6, Color.WHITE); // Imposta lo spessore del bordo a 2 pixel e il colore a giallo
+                    button.setBackground(border);
                 }
             }
         }
