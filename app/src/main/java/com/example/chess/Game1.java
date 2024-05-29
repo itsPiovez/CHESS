@@ -329,7 +329,6 @@ public class Game1 extends AppCompatActivity {
                 validMove = false;
             }
 
-
             if (selectedButton.getForeground() != null && validMove) {
                 Drawable backgroundImage = selectedButton.getForeground();
                 selectedButton.setForeground(null);
@@ -405,9 +404,9 @@ public class Game1 extends AppCompatActivity {
 
                 WhiteTurn = !WhiteTurn;
                 canMove = false;
-                for (int i = 0; i < 7; i++) {
+                for (int i = 0; i < 8; i++) {
                     String riga = "";
-                    for (int j = 0; j < 7; j++) {
+                    for (int j = 0; j < 8; j++) {
                         riga = riga + pedine[i][j] + " ";
                         if (pedine[i][j] == "") {
                             riga = riga + "  ";
@@ -573,7 +572,7 @@ public class Game1 extends AppCompatActivity {
         String lastTwoDigits = idString.substring(idString.length() - 3);
         Log.d("MyTag", "Last Two Digits: " + lastTwoDigits);
         int number = Integer.parseInt(lastTwoDigits);
-        int translatedNumber = number - 827;
+        int translatedNumber = number - 831;
         String suffix;
         switch (translatedNumber) {
             case 1:

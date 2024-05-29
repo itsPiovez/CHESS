@@ -424,9 +424,9 @@ private String[][] pedineBlack = {
                 }
 
                 WhiteTurn = !WhiteTurn;
-                for (int i = 0; i < 7; i++) {
+                for (int i = 0; i < 8; i++) {
                     String riga = "";
-                    for (int j = 0; j < 7; j++) {
+                    for (int j = 0; j < 8; j++) {
                         riga = riga + pedine[i][j] + " ";
                         if (pedine[i][j] == "") {
                             riga = riga + "  ";
@@ -587,7 +587,7 @@ private String[][] pedineBlack = {
         String lastTwoDigits = idString.substring(idString.length() - 3);
         Log.d("MyTag", "Last Two Digits: " + lastTwoDigits);
         int number = Integer.parseInt(lastTwoDigits);
-        int translatedNumber = number - 827;
+        int translatedNumber = number - 831;
         String suffix;
         switch (translatedNumber) {
             case 1:
@@ -972,7 +972,7 @@ private String[][] pedineBlack = {
         Log.d("MyTag", "Translated Number: " + translatedNumber);
         Log.d("MyTag", "Col: " + col);
         Log.d("MyTag", "Row: " + row);
-
+        Log.d("MyTag", "Suffix: " + suffix+translatedNumber);
         // Return the translated number with the suffix.
         return suffix+translatedNumber ;
     }
