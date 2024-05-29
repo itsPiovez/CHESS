@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DIALOG" />
-        <DropdownSelection timestamp="2024-05-29T08:30:46.738275700Z">
+        <DropdownSelection timestamp="2024-05-29T19:08:03.136818500Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=ZL5228NBS3" />
@@ -15,12 +15,12 @@
           <targets>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\marco_2340b68\.android\avd\Pixel_3a_API_34_extension_level_7_x86_64.avd" />
+                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\marco_2340b68\.android\avd\Pixel_3a_API_34.avd" />
               </handle>
             </Target>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\marco_2340b68\.android\avd\Pixel_3a_API_34.avd" />
+                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\marco_2340b68\.android\avd\Pixel_3a_API_34_extension_level_7_x86_64.avd" />
               </handle>
             </Target>
           </targets>

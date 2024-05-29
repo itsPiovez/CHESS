@@ -69,27 +69,6 @@ public class Game extends AppCompatActivity {
             {"wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"},
             {"wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"},
     };
-private String[][] pedineBlack = {
-        {"wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"},
-        {"wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"},
-        {"", "", "", "", "", "", "", ""},
-        {"", "", "", "", "", "", "", ""},
-        {"", "", "", "", "", "", "", ""},
-        {"", "", "", "", "", "", "", ""},
-        {"bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"},
-        {"br", "bn", "bb", "bq", "bk", "bb", "bn", "br"},
-    };
-    private String[][] chessBoardBlack = {
-            {"a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"},
-            {"a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"},
-            {"a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3"},
-            {"a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4"},
-            {"a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5"},
-            {"a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6"},
-            {"a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"},
-            {"a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8"}
-
-    };
     private ChessMatch chessMatch = new ChessMatch(this);
     private TextView textViewGame;
     private TextView textViewRoomCode;
@@ -98,6 +77,7 @@ private String[][] pedineBlack = {
     private String tipoPartita;
 
     private Boolean butt=true;
+    private Button turnIndicator;
 
 
     @SuppressLint("MissingInflatedId")
@@ -113,8 +93,7 @@ private String[][] pedineBlack = {
             return insets;
         });
 
-
-
+        turnIndicator = findViewById(R.id.button6);
         ImageButton buttonBack = findViewById(R.id.button5);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +135,6 @@ private String[][] pedineBlack = {
                 }
             }
         });
-
 
         moves = new ArrayList<>();
         textViewGame = findViewById(R.id.TypeGame);
@@ -248,9 +226,24 @@ private String[][] pedineBlack = {
                 ImageButton button = findViewById(resId);
                 button.setTag(pedine[riga][colonna]);
                 Log.d("MyTag", "posizione: " + pedine[riga][colonna]);
-                button.setOnClickListener(v -> handleButtonClick(button));
+                button.setOnClickListener(v -> {
+                    if(v instanceof ImageButton) {
+                        buttonID=getResources().getResourceEntryName(v.getId());
+                        handleButtonClick((ImageButton) v);
+                    }
+                });
             }
         }
+    }
+    private String buttonID;
+    public int[] chessToMatrixPosition(String chessPosition) {
+        int[] matrixPosition = new int[2];
+        matrixPosition[0] = chessPosition.charAt(0) - 'a'; // a = 7, b = 6, c = 5, d = 4, e = 3, f = 2, g = 1, h = 0
+        matrixPosition[1] = '8'-chessPosition.charAt(1) ; // 1 = 0, 2 = 1, 3 = 2, 4 = 3, 5 = 4, 6 = 5, 7 = 6, 8 = 7
+        Log.d("DCCC", "posizione: " + matrixPosition[0] + " " + matrixPosition[1]);
+        col = matrixPosition[1];
+        row = matrixPosition[0];
+        return matrixPosition;
     }
 
     private boolean[][] possibleMoves;
@@ -276,8 +269,13 @@ private String[][] pedineBlack = {
             tag = button.getTag().toString();
             if(tag!="") {
                 if (TurnChecker.canMove(tag, WhiteTurn)&&canMove) {
-                    int posizione = button.getId();
-                    String posizionescacchi = translateNumber(posizione);
+                    String posizionescacchi = "";
+                    if(buttonID!=null){
+                    posizionescacchi = buttonID;
+                    posizionescacchi = posizionescacchi.substring(7);
+                    Log.d("MyTag", "posizione: " + posizionescacchi);
+                    chessToMatrixPosition(posizionescacchi);
+                    }
                     posizioneIniziale = posizionescacchi;
 
                     char colona = posizionescacchi.charAt(0);
@@ -310,8 +308,10 @@ private String[][] pedineBlack = {
                 Log.d("MyTag", "posizione: " + coordinates[i] + " " + coordinates[i+1]);
                 i++;
             }
-            int posizione1 = button.getId();
-            String posizionescacchi = translateNumber(posizione1);
+            String posizionescacchi = buttonID;
+            posizionescacchi = posizionescacchi.substring(7);
+            chessToMatrixPosition(posizionescacchi);
+
             char colona = posizionescacchi.charAt(0);
             int rig = Integer.parseInt(posizionescacchi.substring(1));
             target = new ChessPosition((char) (colona), rig);
@@ -338,15 +338,21 @@ private String[][] pedineBlack = {
             if (!WhiteTurn) {
                 capturedPiece = chessMatch.performChessMove(source, target);
                 check = chessMatch.testCheck(BLACK);
+
+                Position opponentPiecePosition = new Position(row, col); // sostituisci row e column con le coordinate del pezzo avversario
+                List<Position> defensiveMoves = chessMatch.findDefensiveMoves(opponentPiecePosition, BLACK);
             }
             else{
                 capturedPiece = chessMatch.performChessMove(source, target);
                 check = chessMatch.testCheck(WHITE);
+
+                Position opponentPiecePosition = new Position(row, col); // sostituisci row e column con le coordinate del pezzo avversario
+                List<Position> defensiveMoves = chessMatch.findDefensiveMoves(opponentPiecePosition, WHITE);
             }
             if(check){
                 validMove = false;
             }
-
+            Toast.makeText(this, "Scacco " + check, Toast.LENGTH_SHORT).show();
 
             if (selectedButton.getForeground() != null && validMove ==true ) {
                 Drawable backgroundImage = selectedButton.getForeground();
@@ -385,45 +391,13 @@ private String[][] pedineBlack = {
                 Log.d("MyTag", "Pedine Prese dai Neri: " + capturedWhite);
 
 
-                if(!WhiteTurn) {
-                    check = chessMatch.testCheck(WHITE);
-                    if (check) {
-                        checkMate = chessMatch.testCheckMate(WHITE);
-                        if (checkMate) {
-                            Log.d("MyTag", "Scacco Matto Re Bianco");
-                            Log.d("MyTag", "Vittoria Neri");
-                            Toast.makeText(this, "Scacco Matto Re Bianco", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Log.d("MyTag", "Scacco Re Bianco");
-                            Toast.makeText(this, "Scacco Re Bianco", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-                else {
-                    check = chessMatch.testCheck(BLACK);
-                    if (check) {
-                        checkMate = chessMatch.testCheckMate(BLACK);
-                        if (checkMate) {
-                            Log.d("MyTag", "Scacco Matto Re Nero");
-                            Log.d("MyTag", "Vittoria Bianchi");
-                            Toast.makeText(this, "Scacco Matto Re Nero", Toast.LENGTH_SHORT).show();
-
-                        }
-                        else {
-                            Log.d("MyTag", "Scacco Re Nero");
-                            Toast.makeText(this, "Scacco Re Nero", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                    Log.d("MyTag", "Check: " + check);
-                    Log.d("MyTag", "Check Mate: " + checkMate);
-                }
+                chessHandle();
                 if(tipoPartita.equals("Bianco")){
                     canMove = false;
                 }
 
                 WhiteTurn = !WhiteTurn;
+                updateTurnIndicator();
                 for (int i = 0; i < 8; i++) {
                     String riga = "";
                     for (int j = 0; j < 8; j++) {
@@ -467,9 +441,13 @@ private String[][] pedineBlack = {
             Log.d( "MyTag", "colona: " + colona + " rig: " + rig);
             target = new ChessPosition(colona, rig);
             handleArrocco(from,to);
-            ChessPiece capturedPiece = chessMatch.performChessMove(source, target);
+            chessMatch.performChessMove(source, target);
             canMove=true;
+            chessHandle();
             WhiteTurn = !WhiteTurn;
+            updateTurnIndicator();
+            chessHandle();
+
         });
     }
 
@@ -491,6 +469,7 @@ private String[][] pedineBlack = {
         }
     }
 
+
     private void removeHighlightFromPossibleMoves() {
         for (int i = 0; i < chessBoard.length; i++) {
             for (int j = 0; j < chessBoard[i].length; j++) {
@@ -503,6 +482,17 @@ private String[][] pedineBlack = {
                         button.setBackgroundColor(Color.parseColor("#B38663"));
                     }
                 }
+        }
+    }
+    private void updateTurnIndicator() {
+        if (WhiteTurn) {
+            turnIndicator.setText("White Turn");
+            turnIndicator.setBackgroundColor(Color.WHITE); // Imposta lo sfondo bianco
+            turnIndicator.setTextColor(Color.BLACK); // Imposta il colore del testo nero
+        } else {
+            turnIndicator.setText("Black Turn");
+            turnIndicator.setBackgroundColor(Color.BLACK); // Imposta lo sfondo nero
+            turnIndicator.setTextColor(Color.WHITE); // Imposta il colore del testo bianco
         }
     }
     public void handleArrocco(String from, String to) {
@@ -580,400 +570,40 @@ private String[][] pedineBlack = {
 
         return coordinates;
     }
-
-
-    public static String translateNumber(int id) {
-        String idString = Integer.toString(id);
-        String lastTwoDigits = idString.substring(idString.length() - 3);
-        Log.d("MyTag", "Last Two Digits: " + lastTwoDigits);
-        int number = Integer.parseInt(lastTwoDigits);
-        int translatedNumber = number - 831;
-        String suffix;
-        switch (translatedNumber) {
-            case 1:
-                col=7;
-                suffix = "a";
-                row=0;
-                break;
-            case 2:
-                col=6;
-                suffix = "a";
-                row=0;
-                break;
-            case 3:
-                col=5;
-                suffix = "a";
-                row=0;
-                break;
-            case 4:
-                col=4;
-                suffix = "a";
-                row=0;
-                break;
-            case 5:
-                col=3;
-                suffix = "a";
-                row=0;
-                break;
-            case 6:
-                col=2;
-                suffix = "a";
-                row=0;
-                break;
-            case 7:
-                col=1;
-                suffix = "a";
-                row=0;
-                break;
-            case 8:
-                col=0;
-                suffix = "a";
-                row=0;
-                break;
-            case 9:
-                col=7;
-                suffix = "b";
-                translatedNumber = translatedNumber - 8;
-                row=1;
-                break;
-            case 10:
-                col=6;
-                suffix = "b";
-                translatedNumber = translatedNumber - 8;
-                row=1;
-                break;
-            case 11:
-                col=5;
-                suffix = "b";
-                translatedNumber = translatedNumber - 8;
-                row=1;
-                break;
-            case 12:
-                col=4;
-                suffix = "b";
-                translatedNumber = translatedNumber - 8;
-                row=1;
-                break;
-            case 13:
-                col=3;
-                suffix = "b";
-                translatedNumber = translatedNumber - 8;
-                row=1;
-                break;
-            case 14:
-                col=2;
-                suffix = "b";
-                translatedNumber = translatedNumber - 8;
-                row=1;
-                break;
-            case 15:
-                col=1;
-                suffix = "b";
-                translatedNumber = translatedNumber - 8;
-                row=1;
-                break;
-            case 16:
-                col=0;
-                suffix = "b";
-                translatedNumber = translatedNumber - 8;
-                row=1;
-                break;
-            case 17:
-                col=7;
-                suffix = "c";
-                translatedNumber = translatedNumber - 16;
-                row=2;
-                break;
-            case 18:
-                col=6;
-                suffix = "c";
-                translatedNumber = translatedNumber - 16;
-                row=2;
-                break;
-            case 19:
-                col=5;
-                suffix = "c";
-                translatedNumber = translatedNumber - 16;
-                row=2;
-                break;
-            case 20:
-                col=4;
-                suffix = "c";
-                translatedNumber = translatedNumber - 16;
-                row=2;
-                break;
-            case 21:
-                col=3;
-                suffix = "c";
-                translatedNumber = translatedNumber - 16;
-                row=2;
-                break;
-            case 22:
-                col=2;
-                suffix = "c";
-                translatedNumber = translatedNumber - 16;
-                row=2;
-                break;
-            case 23:
-                col=1;
-                suffix = "c";
-                translatedNumber = translatedNumber - 16;
-                row=2;
-                break;
-            case 24:
-                col=0;
-                suffix = "c";
-                translatedNumber = translatedNumber - 16;
-                row=2;
-                break;
-            case 25:
-                col=7;
-                suffix = "d";
-                translatedNumber = translatedNumber - 24;
-                row=3;
-                break;
-            case 26:
-                col=6;
-                suffix = "d";
-                translatedNumber = translatedNumber - 24;
-                row=3;
-                break;
-            case 27:
-                col=5;
-                suffix = "d";
-                translatedNumber = translatedNumber - 24;
-                row=3;
-                break;
-            case 28:
-                col=4;
-                suffix = "d";
-                translatedNumber = translatedNumber - 24;
-                row=3;
-                break;
-            case 29:
-                col=3;
-                suffix = "d";
-                translatedNumber = translatedNumber - 24;
-                row=3;
-                break;
-            case 30:
-                col=2;
-                suffix = "d";
-                translatedNumber = translatedNumber - 24;
-                row=3;
-                break;
-            case 31:
-                col=1;
-                suffix = "d";
-                translatedNumber = translatedNumber - 24;
-                row=3;
-                break;
-            case 32:
-                col=0;
-                suffix = "d";
-                translatedNumber = translatedNumber - 24;
-                row=3;
-                break;
-            case 33:
-                col= 7;
-                suffix = "e";
-                translatedNumber = translatedNumber - 32;
-                row=4;
-                break;
-            case 34:
-                col= 6;
-                suffix = "e";
-                translatedNumber = translatedNumber - 32;
-                row=4;
-                break;
-            case 35:
-                col= 5;
-                suffix = "e";
-                translatedNumber = translatedNumber - 32;
-                row=4;
-                break;
-            case 36:
-                col= 4;
-                suffix = "e";
-                translatedNumber = translatedNumber - 32;
-                row=4;
-                break;
-            case 37:
-                col= 3;
-                suffix = "e";
-                translatedNumber = translatedNumber - 32;
-                row=4;
-                break;
-            case 38:
-                col= 2;
-                suffix = "e";
-                translatedNumber = translatedNumber - 32;
-                row=4;
-                break;
-            case 39:
-                col= 1;
-                suffix = "e";
-                translatedNumber = translatedNumber - 32;
-                row=4;
-                break;
-            case 40:
-                col= 0;
-                suffix = "e";
-                translatedNumber = translatedNumber - 32;
-                row=4;
-                break;
-            case 41:
-                col=7;
-                suffix = "f";
-                translatedNumber = translatedNumber - 40;
-                row=5;
-                break;
-            case 42:
-                col=6;
-                suffix = "f";
-                translatedNumber = translatedNumber - 40;
-                row=5;
-                break;
-            case 43:
-                col=5;
-                suffix = "f";
-                translatedNumber = translatedNumber - 40;
-                row=5;
-                break;
-            case 44:
-                col=4;
-                suffix = "f";
-                translatedNumber = translatedNumber - 40;
-                row=5;
-                break;
-            case 45:
-                col=3;
-                suffix = "f";
-                translatedNumber = translatedNumber - 40;
-                row=5;
-                break;
-            case 46:
-                col=2;
-                suffix = "f";
-                translatedNumber = translatedNumber - 40;
-                row=5;
-                break;
-            case 47:
-                col=1;
-                suffix = "f";
-                translatedNumber = translatedNumber - 40;
-                row=5;
-                break;
-            case 48:
-                col=0;
-                suffix = "f";
-                translatedNumber = translatedNumber - 40;
-                row=5;
-                break;
-            case 49:
-                col=7;
-                suffix = "g";
-                translatedNumber = translatedNumber - 48;
-                row=6;
-                break;
-            case 50:
-                col=6;
-                suffix = "g";
-                translatedNumber = translatedNumber - 48;
-                row=6;
-                break;
-            case 51:
-                col=5;
-                suffix = "g";
-                translatedNumber = translatedNumber - 48;
-                row=6;
-                break;
-            case 52:
-                col=4;
-                suffix = "g";
-                translatedNumber = translatedNumber - 48;
-                row=6;
-                break;
-            case 53:
-                col=3;
-                suffix = "g";
-                translatedNumber = translatedNumber - 48;
-                row=6;
-                break;
-            case 54:
-                col=2;
-                suffix = "g";
-                translatedNumber = translatedNumber - 48;
-                row=6;
-                break;
-            case 55:
-                col=1;
-                suffix = "g";
-                translatedNumber = translatedNumber - 48;
-                row=6;
-                break;
-            case 56:
-                col=0;
-                suffix = "g";
-                translatedNumber = translatedNumber - 48;
-                row=6;
-                break;
-            case 57:
-                col=7;
-                suffix = "h";
-                translatedNumber = translatedNumber - 56;
-                row=7;
-                break;
-            case 58:
-                col=6;
-                suffix = "h";
-                translatedNumber = translatedNumber - 56;
-                row=7;
-                break;
-            case 59:
-                col=5;
-                suffix = "h";
-                translatedNumber = translatedNumber - 56;
-                row=7;
-                break;
-            case 60:
-                col=4;
-                suffix = "h";
-                translatedNumber = translatedNumber - 56;
-                row=7;
-                break;
-            case 61:
-                col=3;
-                suffix = "h";
-                translatedNumber = translatedNumber - 56;
-                row=7;
-                break;
-            case 62:
-                col=2;
-                suffix = "h";
-                translatedNumber = translatedNumber - 56;
-                row=7;
-                break;
-            case 63:
-                col=1;
-                suffix = "h";
-                translatedNumber = translatedNumber - 56;
-                row=7;
-                break;
-            case 64:
-                col=0;
-                suffix = "h";
-                translatedNumber = translatedNumber - 56;
-                row=7;
-                break;
-            default:
-                return null;
+    private void chessHandle(){
+        if(!WhiteTurn) {
+            check = chessMatch.testCheck(WHITE);
+            if (check) {
+                checkMate = chessMatch.testCheckMate(WHITE);
+                if (checkMate) {
+                    Log.d("MyTag", "Scacco Matto Re Bianco");
+                    Log.d("MyTag", "Vittoria Neri");
+                    Toast.makeText(this, "Scacco Matto Re Bianco", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.d("MyTag", "Scacco Re Bianco");
+                    Toast.makeText(this, "Scacco Re Bianco", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
-        Log.d("MyTag", "Translated Number: " + translatedNumber);
-        Log.d("MyTag", "Col: " + col);
-        Log.d("MyTag", "Row: " + row);
-        Log.d("MyTag", "Suffix: " + suffix+translatedNumber);
-        // Return the translated number with the suffix.
-        return suffix+translatedNumber ;
+        else {
+            check = chessMatch.testCheck(BLACK);
+            if (check) {
+                checkMate = chessMatch.testCheckMate(BLACK);
+                if (checkMate) {
+                    Log.d("MyTag", "Scacco Matto Re Nero");
+                    Log.d("MyTag", "Vittoria Bianchi");
+                    Toast.makeText(this, "Scacco Matto Re Nero", Toast.LENGTH_SHORT).show();
+
+                }
+                else {
+                    Log.d("MyTag", "Scacco Re Nero");
+                    Toast.makeText(this, "Scacco Re Nero", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            Log.d("MyTag", "Check: " + check);
+            Log.d("MyTag", "Check Mate: " + checkMate);
+        }
     }
 }

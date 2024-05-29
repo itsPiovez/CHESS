@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
+import android.graphics.Color;
 
 import org.json.JSONException;
 import org.json.JSONObject;

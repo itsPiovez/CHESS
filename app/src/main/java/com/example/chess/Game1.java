@@ -32,6 +32,7 @@ import androidx.gridlayout.widget.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.chess.boardgame.Position;
 import com.example.chess.chess.ChessMatch;
 import com.example.chess.chess.ChessPiece;
 import com.example.chess.chess.ChessPosition;
@@ -98,6 +99,7 @@ public class Game1 extends AppCompatActivity {
 
      private Boolean butt=true;
 
+    private Button turnIndicator;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -111,6 +113,8 @@ public class Game1 extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        turnIndicator = findViewById(R.id.button6);
+
 
         ImageButton buttonBack = findViewById(R.id.button5);
         buttonBack.setOnClickListener(new View.OnClickListener() {
@@ -230,11 +234,24 @@ public class Game1 extends AppCompatActivity {
                 ImageButton button = findViewById(resId);
                 button.setTag(pedineBlack[riga][colonna]);
                 Log.d("MyTag", "posizione: " + pedineBlack[riga][colonna]);
-                button.setOnClickListener(v -> handleButtonClick(button));
-            }
+                button.setOnClickListener(v -> {
+                    if(v instanceof ImageButton) {
+                        buttonID=getResources().getResourceEntryName(v.getId());
+                        handleButtonClick((ImageButton) v);
+                    }
+                });            }
         }
     }
-
+    private String buttonID;
+    public int[] chessToMatrixPosition(String chessPosition) {
+        int[] matrixPosition = new int[2];
+        matrixPosition[0] = chessPosition.charAt(0) - 'a'; // a = 7, b = 6, c = 5, d = 4, e = 3, f = 2, g = 1, h = 0
+        matrixPosition[1] = '8'-chessPosition.charAt(1) ; // 1 = 0, 2 = 1, 3 = 2, 4 = 3, 5 = 4, 6 = 5, 7 = 6, 8 = 7
+        Log.d("DCCC", "posizione: " + matrixPosition[0] + " " + matrixPosition[1]);
+        col = matrixPosition[1];
+        row = matrixPosition[0];
+        return matrixPosition;
+    }
     private boolean[][] possibleMoves;
     private ImageButton selectedButton;
     private String tag="";
@@ -258,8 +275,13 @@ public class Game1 extends AppCompatActivity {
 
             if(tag!="") {
                 if (TurnChecker.canMove(tag, WhiteTurn)&&canMove) {
-                    int posizione = button.getId();
-                    String posizionescacchi = translateNumber(posizione);
+                    String posizionescacchi = "";
+                    if(buttonID!=null){
+                        posizionescacchi = buttonID;
+                        posizionescacchi = posizionescacchi.substring(7);
+                        Log.d("MyTag", "posizione: " + posizionescacchi);
+                        chessToMatrixPosition(posizionescacchi);
+                    }
                     posizioneIniziale = posizionescacchi;
 
                     char colona = posizionescacchi.charAt(0);
@@ -292,8 +314,9 @@ public class Game1 extends AppCompatActivity {
                 Log.d("MyTag", "posizione: " + coordinates[i] + " " + coordinates[i+1]);
                 i++;
             }
-            int posizione1 = button.getId();
-            String posizionescacchi = translateNumber(posizione1);
+            String posizionescacchi = buttonID;
+            posizionescacchi = posizionescacchi.substring(7);
+            chessToMatrixPosition(posizionescacchi);
             char colona = posizionescacchi.charAt(0);
             int rig = Integer.parseInt(posizionescacchi.substring(1));
             target = new ChessPosition((char) (colona), rig);
@@ -309,7 +332,6 @@ public class Game1 extends AppCompatActivity {
                 }
                 i++;
             }
-
             if (!validMove) {
                 selectedButton = null;
                 tag = null;
@@ -320,14 +342,24 @@ public class Game1 extends AppCompatActivity {
             Log.d("MyTag", "mossa1 " + validMove);
             //controllo validità in caso di scacco
             if(!WhiteTurn){
+                capturedPiece = chessMatch.performChessMove(source, target);
                 check = chessMatch.testCheck(BLACK);
+
+                Position opponentPiecePosition = new Position(row, col); // sostituisci row e column con le coordinate del pezzo avversario
+                List<Position> defensiveMoves = chessMatch.findDefensiveMoves(opponentPiecePosition, WHITE);
             }
             else{
+                capturedPiece = chessMatch.performChessMove(source, target);
                 check = chessMatch.testCheck(WHITE);
+
+                Position opponentPiecePosition = new Position(row, col); // sostituisci row e column con le coordinate del pezzo avversario
+                List<Position> defensiveMoves = chessMatch.findDefensiveMoves(opponentPiecePosition, WHITE);
+
             }
             if(check){
                 validMove = false;
             }
+            Toast.makeText(this, "Scacco " + check, Toast.LENGTH_SHORT).show();
 
             if (selectedButton.getForeground() != null && validMove) {
                 Drawable backgroundImage = selectedButton.getForeground();
@@ -351,7 +383,6 @@ public class Game1 extends AppCompatActivity {
 
                 selectedButton1.setTag("");
                 pedine[posizioneColonnaPartenza][posizioneRigaPartenza] = "";
-                capturedPiece = chessMatch.performChessMove(source, target);
 
                 if (capturedPiece != null) {
                     if (WhiteTurn) {
@@ -367,42 +398,10 @@ public class Game1 extends AppCompatActivity {
                 Log.d("MyTag", "Pedine Prese dai Neri: " + capturedWhite);
 
 
-                if(!WhiteTurn) {
-                    check = chessMatch.testCheck(WHITE);
-                    if (check) {
-                        checkMate = chessMatch.testCheckMate(WHITE);
-                        if (checkMate) {
-                            Log.d("MyTag", "Scacco Matto Re Bianco");
-                            Log.d("MyTag", "Vittoria Neri");
-                            Toast.makeText(this, "Scacco Matto Re Bianco", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Log.d("MyTag", "Scacco Re Bianco");
-                            Toast.makeText(this, "Scacco Re Bianco", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-                else {
-                    check = chessMatch.testCheck(BLACK);
-                    if (check) {
-                        checkMate = chessMatch.testCheckMate(BLACK);
-                        if (checkMate) {
-                            Log.d("MyTag", "Scacco Matto Re Nero");
-                            Log.d("MyTag", "Vittoria Bianchi");
-                            Toast.makeText(this, "Scacco Matto Re Nero", Toast.LENGTH_SHORT).show();
-
-                        }
-                        else {
-                            Log.d("MyTag", "Scacco Re Nero");
-                            Toast.makeText(this, "Scacco Re Nero", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                    Log.d("MyTag", "Check: " + check);
-                    Log.d("MyTag", "Check Mate: " + checkMate);
-                }
-
+                chessHandle();
                 WhiteTurn = !WhiteTurn;
+                updateTurnIndicator();
+
                 canMove = false;
                 for (int i = 0; i < 8; i++) {
                     String riga = "";
@@ -424,6 +423,53 @@ public class Game1 extends AppCompatActivity {
     }
 
 
+    private void chessHandle(){
+        if(!WhiteTurn) {
+            check = chessMatch.testCheck(WHITE);
+            if (check) {
+                checkMate = chessMatch.testCheckMate(WHITE);
+                if (checkMate) {
+                    Log.d("MyTag", "Scacco Matto Re Bianco");
+                    Log.d("MyTag", "Vittoria Neri");
+                    Toast.makeText(this, "Scacco Matto Re Bianco", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.d("MyTag", "Scacco Re Bianco");
+                    Toast.makeText(this, "Scacco Re Bianco", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        else {
+            check = chessMatch.testCheck(BLACK);
+            if (check) {
+                checkMate = chessMatch.testCheckMate(BLACK);
+                if (checkMate) {
+                    Log.d("MyTag", "Scacco Matto Re Nero");
+                    Log.d("MyTag", "Vittoria Bianchi");
+                    Toast.makeText(this, "Scacco Matto Re Nero", Toast.LENGTH_SHORT).show();
+
+                }
+                else {
+                    Log.d("MyTag", "Scacco Re Nero");
+                    Toast.makeText(this, "Scacco Re Nero", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            Log.d("MyTag", "Check: " + check);
+            Log.d("MyTag", "Check Mate: " + checkMate);
+        }
+    }
+    private void updateTurnIndicator() {
+        if (WhiteTurn) {
+            turnIndicator.setText("White Turn");
+            turnIndicator.setBackgroundColor(Color.WHITE); // Imposta lo sfondo bianco
+            turnIndicator.setTextColor(Color.BLACK); // Imposta il colore del testo nero
+        } else {
+            turnIndicator.setText("Black Turn");
+            turnIndicator.setBackgroundColor(Color.BLACK); // Imposta lo sfondo nero
+            turnIndicator.setTextColor(Color.WHITE); // Imposta il colore del testo bianco
+        }
+    }
     private void executeMove(String from, String to) {
         runOnUiThread(() -> {
             String buttonFrom = "button_" + from.substring(0, 2);
@@ -453,7 +499,10 @@ public class Game1 extends AppCompatActivity {
             handleArrocco(from,to);
             ChessPiece capturedPiece = chessMatch.performChessMove(source, target);
             canMove=true;
+            chessHandle();
             WhiteTurn = !WhiteTurn;
+            updateTurnIndicator();
+            chessHandle();
         });
     }
 
